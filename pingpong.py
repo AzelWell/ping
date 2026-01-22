@@ -1,4 +1,6 @@
 from pygame import *
+from time import sleep
+
 
 bg_color = (255,255,255)
 window = display.set_mode((600,500))
@@ -42,6 +44,11 @@ class Player2(GameSprite):
 
 p1 = Player1(65,65,'shield.png',414,210,10)
 p2 = Player2(65,65,'shield.png',119,210,10)
+ball = Player2(30,30,'bola.png',168,210,5)
+
+speed_x = ball.speed
+speed_y = ball.speed
+
 game = True
 while game is True:
     for e in event.get():
@@ -52,8 +59,23 @@ while game is True:
     p1.update()
     p2.reset()
     p2.update()
+    ball.reset()
+    ball.rect.x += speed_x
+    ball.rect.y += speed_y
 
+    ball.update()
+    display.update()
 
+    if ball.rect.y > 410-80 or ball.rect.y <100:
+        speed_y *= -1
+
+    if sprite.collide_rect(p1,ball) or sprite.collide_rect(p2,ball):
+        speed_x *= -1
+    
+    if ball.rect.x >= 700:
+        font.init()
+        font1 = font.Font(None,35)
+        youlose= font1.render('PLAYER 2 LOSE',True,(0,180,0))
+        window.blit(youlose,(600/2,500/2))
 
     fps.tick(60)
-    display.update()
